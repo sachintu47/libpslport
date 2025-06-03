@@ -1,0 +1,14 @@
+node('linux')
+{
+  stage ('Poll') {
+    checkout([
+      $class: 'GitSCM',
+      branches: [[name: '*/main']],
+      doGenerateSubmoduleConfigurations: false,
+      extensions: [],
+      userRemoteConfigs: [[url: 'https://github.com/zopencommunity/libpslport.git']]])
+  }
+  stage('Build') {
+    build job: 'Port-Pipeline', parameters: [string(name: 'PORT_GITHUB_REPO', value: 'https://github.com/zopencommunity/libpslport.git'), string(name: 'PORT_DESCRIPTION', value: 'C library for the Public Suffix List' ), string(name: 'BUILD_LINE', value: 'DEV') ]
+  }
+}
